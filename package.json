@@ -1,5 +1,5 @@
 {
-  "name": "develocity-mcp-server",
+  "name": "@ryandens/develocity-mcp-server",
   "version": "0.1.0",
   "description": "MCP server for Develocity API access",
   "main": "dist/index.js",
