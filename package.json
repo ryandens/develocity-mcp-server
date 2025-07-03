@@ -19,8 +19,11 @@
     "develocity",
     "gradle"
   ],
-  "author": "",
+  "author": "Ryan Dens",
   "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ryandens/develocity-mcp-server.git"
