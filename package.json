@@ -1,8 +1,9 @@
 {
   "name": "@ryandens/develocity-mcp-server",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "MCP server for Develocity API access",
   "main": "dist/index.js",
+  "bin": "dist/index.js",
   "type": "module",
   "scripts": {
     "build": "tsc",
