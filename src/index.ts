@@ -41,17 +41,7 @@ class DevelocityMCPServer {
             description: 'Get the version of the Develocity instance',
             inputSchema: {
               type: 'object',
-              properties: {
-                baseUrl: {
-                  type: 'string',
-                  description:
-                    'Override the base URL for the Develocity instance',
-                },
-                accessKey: {
-                  type: 'string',
-                  description: 'Develocity access key for authentication',
-                },
-              },
+              properties: {},
             },
           },
         ],
@@ -59,25 +49,23 @@ class DevelocityMCPServer {
     });
 
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
-      const { name, arguments: args } = request.params;
+      const { name } = request.params;
 
       if (name === 'develocity_get_version') {
-        return await this.getVersion(
-          args as { baseUrl?: string; accessKey?: string }
-        );
+        return await this.getVersion();
       }
 
       throw new Error(`Unknown tool: ${name}`);
     });
   }
 
-  private async getVersion(args: { baseUrl?: string; accessKey?: string }) {
-    const baseUrl = args.baseUrl || this.config.baseUrl;
-    const accessKey = args.accessKey || this.config.accessKey;
+  private async getVersion() {
+    const baseUrl = this.config.baseUrl;
+    const accessKey = this.config.accessKey;
 
     if (!baseUrl) {
       throw new Error(
-        'Base URL is required. Set DEVELOCITY_BASE_URL environment variable or provide baseUrl parameter.'
+        'Base URL is required. Set DEVELOCITY_BASE_URL environment variable.'
       );
     }
 

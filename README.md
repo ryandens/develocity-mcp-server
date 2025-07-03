@@ -35,9 +35,7 @@ npm start
 
 Get the version of the Develocity instance.
 
-**Parameters:**
-- `baseUrl` (optional): Override the base URL for the Develocity instance
-- `accessKey` (optional): Develocity access key for authentication
+**Parameters:** None (uses server configuration)
 
 **Example Response:**
 ```json
