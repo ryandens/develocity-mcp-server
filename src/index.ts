@@ -21,7 +21,7 @@ class DevelocityMCPServer {
   constructor() {
     this.server = new Server({
       name: 'develocity-mcp-server',
-      version: '1.0.0',
+      version: '0.1.0',
     });
 
     this.config = {

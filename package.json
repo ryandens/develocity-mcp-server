@@ -1,6 +1,6 @@
 {
   "name": "develocity-mcp-server",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "MCP server for Develocity API access",
   "main": "dist/index.js",
   "type": "module",
