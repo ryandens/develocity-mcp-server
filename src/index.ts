@@ -89,11 +89,13 @@ class DevelocityMCPServer {
         try {
           const errorJson = JSON.parse(errorText) as DevelocityError;
           errorMessage = errorJson.message || errorMessage;
-        } catch {
+        } catch (parseError) {
           // If error response is not JSON, use the default message
         }
 
-        throw new Error(`Failed to fetch version: ${errorMessage}`);
+        throw new Error(`Failed to fetch version: ${errorMessage}`, {
+          cause: { status: response.status, statusText: response.statusText }
+        });
       }
 
       const version = (await response.json()) as DevelocityVersion;
