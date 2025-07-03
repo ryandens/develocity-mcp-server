@@ -20,7 +20,7 @@ npm run build
 
 ### Environment Variables
 
-- `DEVELOCITY_BASE_URL`: Base URL for your Develocity instance (default: https://scans.gradle.com)
+- `DEVELOCITY_BASE_URL`: Base URL for your Develocity instance (required)
 - `DEVELOCITY_ACCESS_KEY`: Your Develocity access key for authentication
 
 ### Running the Server
@@ -28,6 +28,54 @@ npm run build
 ```bash
 npm start
 ```
+
+### Adding to Claude Desktop
+
+1. Build the server:
+   ```bash
+   npm run build
+   ```
+
+2. Add the following to your Claude Desktop configuration file:
+   - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - **Windows**: `%APPDATA%/Claude/claude_desktop_config.json`
+
+   ```json
+   {
+     "mcpServers": {
+       "develocity": {
+         "command": "node",
+         "args": ["/path/to/develocity-mcp-server/dist/index.js"],
+         "env": {
+           "DEVELOCITY_BASE_URL": "https://your-develocity-instance.com",
+           "DEVELOCITY_ACCESS_KEY": "your-access-key"
+         }
+       }
+     }
+   }
+   ```
+
+3. Restart Claude Desktop to load the new server.
+
+### Adding to Claude Code
+
+1. Build the server:
+   ```bash
+   npm run build
+   ```
+
+2. Add the MCP server configuration to your Claude Code settings:
+   - Open Claude Code settings
+   - Navigate to MCP Servers section
+   - Add a new server with:
+     - **Name**: `develocity`
+     - **Command**: `node`
+     - **Args**: `["/path/to/develocity-mcp-server/dist/index.js"]`
+     - **Environment Variables**:
+       - `DEVELOCITY_BASE_URL`: Your Develocity instance URL
+       - `DEVELOCITY_ACCESS_KEY`: Your access key
+
+3. Restart Claude Code to load the new server.
 
 ### Available Tools
 

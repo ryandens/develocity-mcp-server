@@ -12,8 +12,6 @@ import {
   DevelocityError,
 } from './types.js';
 
-const DEFAULT_BASE_URL = 'https://scans.gradle.com';
-
 class DevelocityMCPServer {
   private server: Server;
   private config: DevelocityConfig;
@@ -25,7 +23,7 @@ class DevelocityMCPServer {
     });
 
     this.config = {
-      baseUrl: process.env.DEVELOCITY_BASE_URL || DEFAULT_BASE_URL,
+      baseUrl: process.env.DEVELOCITY_BASE_URL,
       accessKey: process.env.DEVELOCITY_ACCESS_KEY,
     };
 
