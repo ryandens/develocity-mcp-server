@@ -74,13 +74,3 @@ Get the version of the Develocity instance.
   "patch": 0
 }
 ```
-
-## Development
-
-```bash
-npm run dev
-```
-
-## License
-
-MIT
