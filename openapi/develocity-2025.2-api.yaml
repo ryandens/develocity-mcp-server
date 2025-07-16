@@ -3,7 +3,7 @@ info:
   title: Develocity API
   description: |
     The Develocity API allows programmatic interaction with various aspects of Develocity, from configuration to inspecting build data.
-  version: "2025.1"
+  version: "2025.2"
   license:
     name: Develocity License
     url: https://gradle.com/help/legal-gradle-software-license-agreement
@@ -15,7 +15,7 @@ info:
     url: https://assets.gradle.com/logo/develocity-logo.svg
     altText: Develocity
 servers:
-  - url: https://dv.mycompany.com
+  - url: https://develocity.example.com
     description: Your Develocity instance.
 security:
   - DevelocityAccessKeyOrToken: []
@@ -69,7 +69,7 @@ paths:
     post:
       operationId: CreateAccessToken
       summary: Create a new access token
-      description: Create a new short-lived access token, optionally limited to the provided permissions and projects. Users do not need any specific Develocity permission to do this. If an access key is used to authenticate this request, the created token will be limited to the user's permissions and projects. If an access token is used to authenticate this request, the created token will be limited to the authenticating token's permissions and projects and not live longer than the authenticating token's remaining lifetime. Query parameters can be used to further restrict the permissions of the access token. A 403 response will be sent if one of the projects or permissions present in the query parameters is not assigned to this user. A 403 will also be sent if an access token is used to authenticate the request and the requested expiration date is after the authenticating access token's expiration.
+      description: Create a new short-lived access token, optionally limited to the provided permissions and projects. Users do not need any specific Develocity permission to do this, but must be authenticated. If an access key is used to authenticate this request, the created token will be limited to the user's permissions and projects. If an access token is used to authenticate this request, the created token will be limited to the authenticating token's permissions and projects and not live longer than the authenticating token's remaining lifetime. Query parameters can be used to further restrict the permissions of the access token. A 401 response will be sent if the request is not authenticated. A 403 response will be sent if one of the projects or permissions present in the query parameters is not assigned to this user. A 403 will also be sent if an access token is used to authenticate the request and the requested expiration date is after the authenticating access token's expiration.
       tags:
         - Auth
         - GradleEnterprise
@@ -123,6 +123,8 @@ paths:
               example: eyJraWQiOiJ0ZXN0LWtleSIsImFsZyI6IlJTMjU2IiwidHlwIjoiSldUIn0.eyJpc19hbm9ueW1vdXMiOmZhbHNlLCJwZXJtaXNzaW9ucyI6WyJSRUFEX1ZFUlNJT04iLCJFWFBPUlRfREFUQSIsIkFDQ0VTU19EQVRBX1dJVEhPVVRfQVNTT0NJQVRFRF9QUk9KRUNUIl0sInByb2plY3RzIjp7ImEiOjEsImIiOjJ9LCJ1c2VyX2lkIjoic29tZS1pZCIsInVzZXJuYW1lIjoidGVzdCIsImZpcnN0X25hbWUiOiJhIiwibGFzdF9uYW1lIjoidXNlciIsImVtYWlsIjoiYkBncmFkbGUuY29tIiwic3ViIjoidGVzdCIsImV4cCI6NzIwMCwibmJmIjowLCJpYXQiOjAsImF1ZCI6ImV4YW1wbGUuZ3JhZGxlLmNvbSIsImlzcyI6ImV4YW1wbGUuZ3JhZGxlLmNvbSIsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4ifQ.H1_NEG1xuleP-WIAY_uvSmdd2o7i_-Ko3qhlo04zvCgrElJe7_F5jNuqsyDfnb5hvKlOe5UKG_7QPTgY9-3pFQ
         '400':
           $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthenticatedError'
         '403':
           $ref: '#/components/responses/AccessTokenForbidden'
         '404':
@@ -353,7 +355,9 @@ paths:
                             namespace: org.apache.xmlgraphics
                             name: batik-anim
                             version: 1.9.1
-                            purl: pkg:maven/org.apache.xmlgraphics/batik-anim@1.9.1
+                            qualifiers:
+                              repository_url: https://repo.maven.apache.org/maven2/
+                            purl: pkg:maven/org.apache.xmlgraphics/batik-anim@1.9.1?repository_url=https%3A%2F%2Frepo.maven.apache.org%2Fmaven2%2F
                     mavenAttributes:
                       problem:
                         type: urn:gradle:enterprise:api:problems:build-model-not-applicable
@@ -451,8 +455,9 @@ paths:
                             name: batik-anim
                             version: 1.9.1
                             qualifiers:
+                              repository_url: https://repo.maven.apache.org/maven2/
                               type: jar
-                            purl: pkg:maven/org.apache.xmlgraphics/batik-anim@1.9.1?type=jar
+                            purl: pkg:maven/org.apache.xmlgraphics/batik-anim@1.9.1?repository_url=https%3A%2F%2Frepo.maven.apache.org%2Fmaven2%2F&type=jar
                 - id: cvpd4j7ug7j4q
                   availableAt: 1635400483000
                   buildToolType: bazel
@@ -594,7 +599,9 @@ paths:
                           namespace: org.apache.xmlgraphics
                           name: batik-anim
                           version: 1.9.1
-                          purl: pkg:maven/org.apache.xmlgraphics/batik-anim@1.9.1
+                          qualifiers:
+                            repository_url: https://repo.maven.apache.org/maven2/
+                          purl: pkg:maven/org.apache.xmlgraphics/batik-anim@1.9.1?repository_url=https%3A%2F%2Frepo.maven.apache.org%2Fmaven2%2F
         '400':
           $ref: '#/components/responses/BadRequestError'
         '404':
@@ -1049,6 +1056,7 @@ paths:
                   predictiveTestSelection:
                     usage:
                       status: enabled
+                      selectionMode: relevant
                       wallClockSavings: 750
                       serialTimeSavings: 750
                     simulation:
@@ -1092,6 +1100,7 @@ paths:
                       predictiveTestSelection:
                         usage:
                           status: enabled
+                          selectionMode: relevant
                           wallClockSavings: 750
                           serialTimeSavings: 750
                           nonSelectedTestClassesCount: 1
@@ -1133,6 +1142,7 @@ paths:
                       predictiveTestSelection:
                         usage:
                           status: enabled
+                          selectionMode: relevant
                           wallClockSavings: 750
                           serialTimeSavings: 750
                           nonSelectedTestClassesCount: 1
@@ -1208,6 +1218,7 @@ paths:
                   predictiveTestSelection:
                     usage:
                       status: enabled
+                      selectionMode: relevant
                       wallClockSavings: 750
                       serialTimeSavings: 750
                     simulation:
@@ -1251,6 +1262,7 @@ paths:
                       predictiveTestSelection:
                         usage:
                           status: enabled
+                          selectionMode: relevant
                           wallClockSavings: 750
                           serialTimeSavings: 750
                           nonSelectedTestClassesCount: 1
@@ -1292,6 +1304,7 @@ paths:
                       predictiveTestSelection:
                         usage:
                           status: enabled
+                          selectionMode: relevant
                           wallClockSavings: 750
                           serialTimeSavings: 750
                           nonSelectedTestClassesCount: 1
@@ -1375,6 +1388,7 @@ paths:
                     fingerprintingDuration: 5
                     avoidanceSavings: 6000
                     cacheArtifactSize: 3000
+                    hasFailed: false
                   - taskPath: ':task2'
                     taskType: org.gradle.api.tasks.Task
                     avoidanceOutcome: avoided_from_remote_cache
@@ -1382,6 +1396,7 @@ paths:
                     fingerprintingDuration: 3
                     avoidanceSavings: 4000
                     cacheArtifactSize: 3000
+                    hasFailed: false
                   - taskPath: ':task3'
                     taskType: org.gradle.api.tasks.Task
                     avoidanceOutcome: executed_not_cacheable
@@ -1389,12 +1404,14 @@ paths:
                     fingerprintingDuration: 6
                     nonCacheabilityCategory: cache-if_condition_not_matched
                     nonCacheabilityReason: '''Task outputs cacheable'' not satisfied'
+                    hasFailed: false
                   - taskPath: ':task4'
                     taskType: org.gradle.api.tasks.Task
                     avoidanceOutcome: skipped
                     duration: 0
                     fingerprintingDuration: 0
                     skipReasonMessage: some skip reason message
+                    hasFailed: false
                 taskFingerprintingSummary:
                   count: 1
                   serialDuration: 8
@@ -1487,6 +1504,7 @@ paths:
                     duration: 2000
                     nonCacheabilityCategory: build_cache_disabled_by_user
                     nonCacheabilityReason: Neither the local or remote build cache were enabled in the configuration of the build.
+                    hasFailed: false
                   - goalName: compiler:compile
                     mojoType: org.apache.maven.plugin.jar.JarMojo
                     goalExecutionId: default-compile
@@ -1496,6 +1514,7 @@ paths:
                     fingerprintingDuration: 5
                     avoidanceSavings: 6000
                     cacheArtifactSize: 3000
+                    hasFailed: false
                   - goalName: compiler:compile
                     mojoType: org.apache.maven.plugin.jar.JarMojo
                     goalExecutionId: default-compile
@@ -1505,6 +1524,7 @@ paths:
                     fingerprintingDuration: 3
                     avoidanceSavings: 4000
                     cacheArtifactSize: 3000
+                    hasFailed: false
                 goalFingerprintingSummary:
                   count: 1
                   serialDuration: 8
@@ -1933,6 +1953,48 @@ paths:
                     modules:
                       - com.example:top-level
                     goalPrefix: test
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/UnexpectedError'
+        '503':
+          $ref: '#/components/responses/NotReadyError'
+  /api/builds/{id}/maven-extensions:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The Build Scan ID.
+      - in: query
+        name: BuildQuery
+        explode: true
+        description: The query parameters used to retrieve the extensions for a Maven build.
+        schema:
+          $ref: '#/components/schemas/BuildModelQuery'
+    get:
+      operationId: GetMavenExtensions
+      summary: Get the extensions of a Maven build.
+      description: This model is Maven specific and cannot be requested for another build tool.
+      tags:
+        - Builds
+        - Develocity
+      responses:
+        '200':
+          description: The list of extensions in a Maven build.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MavenExtensions'
+              example:
+                extensions:
+                  - groupId: org.apache.maven
+                    artifactId: maven-core
+                    version: 3.9.9
+                    type: CORE
         '400':
           $ref: '#/components/responses/BadRequestError'
         '404':
@@ -2722,6 +2784,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GradleDependencies'
+              example:
+                dependencies:
+                  - scheme: pkg
+                    type: maven
+                    namespace: org.apache.xmlgraphics
+                    name: batik-anim
+                    version: 1.9.1
+                    qualifiers:
+                      repository_url: https://repo.maven.apache.org/maven2/
+                    purl: pkg:maven/org.apache.xmlgraphics/batik-anim@1.9.1?repository_url=https%3A%2F%2Frepo.maven.apache.org%2Fmaven2%2F
         '400':
           $ref: '#/components/responses/BadRequestError'
         '404':
@@ -2758,6 +2830,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MavenDependencies'
+              example:
+                dependencies:
+                  - scheme: pkg
+                    type: maven
+                    namespace: org.apache.xmlgraphics
+                    name: batik-anim
+                    version: 1.9.1
+                    qualifiers:
+                      repository_url: https://repo.maven.apache.org/maven2/
+                      type: jar
+                    purl: pkg:maven/org.apache.xmlgraphics/batik-anim@1.9.1?repository_url=https%3A%2F%2Frepo.maven.apache.org%2Fmaven2%2F&type=jar
         '400':
           $ref: '#/components/responses/BadRequestError'
         '404':
@@ -3156,7 +3239,6 @@ paths:
       description: Returns the list of test containers.
       tags:
         - Tests
-        - GradleEnterprise
         - Develocity
       parameters:
         - in: query
@@ -3243,7 +3325,6 @@ paths:
       description: Retrieves the list of test cases of a single container.
       tags:
         - Tests
-        - GradleEnterprise
         - Develocity
       parameters:
         - in: query
@@ -3295,6 +3376,163 @@ paths:
                         - t53u7u63j35uq
                         - wifudssaudxyo
                         - k6cgdkvi574u4
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '500':
+          $ref: '#/components/responses/UnexpectedError'
+  /api/tests/build/{id}:
+    description: |
+      The tests build endpoint is used to retrieve the test execution information for a specific build.
+    get:
+      operationId: GetBuildTests
+      summary: Get tests executed in the given build.
+      description: Retrieves summary of executed tests and containers, as well as the detailed information about each test execution in each invoked test work unit.
+      tags:
+        - Tests
+        - Develocity
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The Build Scan ID.
+        - in: query
+          name: query
+          explode: true
+          required: true
+          description: The query parameters used to retrieve test execution data for a build.
+          schema:
+            $ref: '#/components/schemas/BuildTestsQuery'
+      responses:
+        '200':
+          description: Test executions in the given build.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuildTestsResponse'
+              example:
+                summary:
+                  duration:
+                    total: 150
+                    serial: 150
+                  testCasesOutcomeDistribution:
+                    total: 3
+                    failed: 1
+                    passed: 1
+                    flaky: 1
+                    skipped: 0
+                    notSelected: 0
+                  testContainersOutcomeDistribution:
+                    total: 2
+                    failed: 0
+                    passed: 2
+                    flaky: 0
+                    skipped: 0
+                    notSelected: 0
+                workUnits:
+                  - name: ':test'
+                    duration:
+                      total: 150
+                      own: 50
+                      serial: 150
+                    outcome: failed
+                    tests:
+                      - name: JUnit Jupiter
+                        duration:
+                          total: 100
+                          own: 50
+                          serial: 100
+                        outcome:
+                          overall: failed
+                          own: passed
+                          children: failed
+                        executions:
+                          - duration:
+                              total: 60
+                              own: 20
+                              serial: 60
+                            outcome:
+                              overall: failed
+                              own: passed
+                              children: failed
+                          - duration:
+                              total: 40
+                              own: 10
+                              serial: 40
+                            outcome:
+                              overall: failed
+                              own: passed
+                              children: failed
+                        children:
+                          - name: org.example.TestContainer
+                            duration:
+                              total: 70
+                              own: 0
+                              serial: 70
+                            outcome:
+                              overall: failed
+                              own: passed
+                              children: failed
+                            executions:
+                              - duration:
+                                  total: 40
+                                  own: 0
+                                  serial: 40
+                                outcome:
+                                  overall: failed
+                                  own: passed
+                                  children: failed
+                              - duration:
+                                  total: 30
+                                  own: 0
+                                  serial: 30
+                                outcome:
+                                  overall: failed
+                                  own: passed
+                                  children: failed
+                            children:
+                              - name: successfulTest
+                                duration:
+                                  total: 10
+                                outcome:
+                                  overall: passed
+                                executions:
+                                  - duration:
+                                      total: 10
+                                    outcome:
+                                      overall: passed
+                                children: []
+                              - name: failingTest
+                                duration:
+                                  total: 20
+                                outcome:
+                                  overall: failed
+                                executions:
+                                  - duration:
+                                      total: 10
+                                    outcome:
+                                      overall: failed
+                                  - duration:
+                                      total: 10
+                                    outcome:
+                                      overall: failed
+                                children: []
+                              - name: flakyTest
+                                duration:
+                                  total: 40
+                                outcome:
+                                  overall: flaky
+                                executions:
+                                  - duration:
+                                      total: 20
+                                    outcome:
+                                      overall: failed
+                                  - duration:
+                                      total: 20
+                                    outcome:
+                                      overall: passed
+                                children: []
         '400':
           $ref: '#/components/responses/BadRequestError'
         '500':
@@ -3946,6 +4184,7 @@ components:
         - maven-build-profile-overview
         - maven-dependencies
         - maven-dependency-resolution
+        - maven-extensions
         - maven-modules
         - maven-plugins
         - maven-resource-usage
@@ -4267,16 +4506,28 @@ components:
           * `unavailable` - Feature status is unknown (e.g. for older Gradle plugin / Maven extension versions) or feature could not be used due to an unexpected error
           * `disabled` - The extension was enabled on none of the tasks in the build / for the task in question
           * `enabled` - The extension was enabled on at least one of the tasks in the build / for the task in question**
+    PredictiveTestSelectionMode:
+      type: string
+      enum:
+        - relevant
+        - remaining
+      description: |
+        Develocity PTS selection mode of a build:
+          * `relevant` - PTS selects only relevant tests (default)
+          * `remaining` - PTS runs alls remaining tests
     TestPerformanceBuildPredictiveTestSelectionUsage:
       type: object
       description: Groups PTS usage data (build level).
       required:
         - status
+        - selectionMode
         - wallClockSavings
         - serialTimeSavings
       properties:
         status:
           $ref: '#/components/schemas/TestAccelerationFeatureUsageStatus'
+        selectionMode:
+          $ref: '#/components/schemas/PredictiveTestSelectionMode'
         wallClockSavings:
           type: integer
           format: int64
@@ -4400,12 +4651,15 @@ components:
       description: Predictive Test Selection related data of a work unit.
       required:
         - status
+        - selectionMode
         - wallClockSavings
         - serialTimeSavings
         - nonSelectedTestClassesCount
       properties:
         status:
           $ref: '#/components/schemas/TestAccelerationFeatureUsageStatus'
+        selectionMode:
+          $ref: '#/components/schemas/PredictiveTestSelectionMode'
         wallClockSavings:
           type: integer
           format: int64
@@ -4571,6 +4825,7 @@ components:
         - taskType
         - avoidanceOutcome
         - duration
+        - hasFailed
       properties:
         taskPath:
           type: string
@@ -4596,10 +4851,10 @@ components:
               * `avoided_up_to_date` - Task whose execution is avoided due to build incrementalism
               * `avoided_from_local_cache` - Task whose execution is avoided due to reusing a local build cache entry
               * `avoided_from_remote_cache` - Task whose execution is avoided due to reusing a remote build cache entry
+              * `avoided_unknown_reason` - Task which was avoided for an unknown reason
               * `executed_cacheable` - Task which is executed but is cacheable
               * `executed_not_cacheable` - Task which is executed but is not cacheable
               * `executed_unknown_cacheability` - Task which is executed and whose cacheability can not be determined
-              * `avoided_unknown_reason` - Task which was avoided for an unknown reason
               * `lifecycle` - Lifecycle task
               * `no-source` - No-source task
               * `skipped` - Skipped task
@@ -4683,6 +4938,9 @@ components:
           type: string
           description: The build cache key. `null` if no build cache key was computed (e.g. when the task is skipped).
           nullable: true
+        hasFailed:
+          type: boolean
+          description: True when the task failed, false otherwise.
     GradleBuildCachePerformanceTaskExecution:
       type: array
       description: A list of executed tasks with performance related information.
@@ -5088,10 +5346,10 @@ components:
               * `avoided_up_to_date` - Artifact transform execution whose execution is avoided due to build incrementalism
               * `avoided_from_local_cache` - Artifact transform execution whose execution is avoided due to reusing a local build cache entry
               * `avoided_from_remote_cache` - Artifact transform execution whose execution is avoided due to reusing a remote build cache entry
+              * `avoided_unknown_reason` - Artifact transform execution which was avoided for an unknown reason
               * `executed_cacheable` - Artifact transform execution which is executed but is cacheable
               * `executed_not_cacheable` - Artifact transform execution which is executed but is not cacheable
               * `executed_unknown_cacheability` - Artifact transform execution which is executed and whose cacheability can not be determined
-              * `avoided_unknown_reason` - Artifact transform execution which was avoided for an unknown reason
               * `skipped` - Skipped artifact transform execution. **This is not emitted anymore, replaced by `up_to_date`.**
         duration:
           type: integer
@@ -5491,7 +5749,7 @@ components:
           description: True when the configuration cache store operation fails, false otherwise.
     GradleConfigurationCacheLoadResult:
       type: object
-      description: The configuration cache store result of a Gradle build.
+      description: The configuration cache load result of a Gradle build.
       required:
         - duration
         - hasFailed
@@ -5502,7 +5760,7 @@ components:
           description: The duration of the configuration cache load operation in milliseconds.
         hasFailed:
           type: boolean
-          description: True when the configuration cache store operation fails, false otherwise.
+          description: True when the configuration cache load operation fails, false otherwise.
     GradleConfigurationCacheResult:
       type: object
       description: The configuration cache result of a Gradle build.
@@ -5534,7 +5792,7 @@ components:
         dependencyResolutionDuration:
           type: integer
           format: int64
-          description: The duration of dependency resolution during configuration caching.
+          description: The duration of dependency resolution during configuration caching in seconds.
         store:
           type: object
           nullable: true
@@ -5889,6 +6147,7 @@ components:
         - goalProjectName
         - avoidanceOutcome
         - duration
+        - hasFailed
       properties:
         goalName:
           type: string
@@ -5987,6 +6246,9 @@ components:
           type: string
           description: Build cache key. `null` if no build cache key was computed (e.g. when fingerprinting failed).
           nullable: true
+        hasFailed:
+          type: boolean
+          description: True when the goal failed, false otherwise.
     MavenBuildCachePerformanceGoalExecution:
       type: array
       description: A list of executed goals with performance related information.
@@ -6269,6 +6531,42 @@ components:
           description: A list of applied plugins in a Maven build.
           items:
             $ref: '#/components/schemas/MavenPlugin'
+    MavenExtension:
+      type: object
+      required:
+        - type
+      properties:
+        groupId:
+          type: string
+          description: The extension group ID. May be null if it cannot be retrieved by the Develocity extension.
+          nullable: true
+        artifactId:
+          type: string
+          description: The extension artifact ID. May be null if it cannot be retrieved by the Develocity extension.
+          nullable: true
+        version:
+          type: string
+          description: The extension version. May be null if it cannot be retrieved by the Develocity extension.
+          nullable: true
+        type:
+          type: string
+          description: |
+            The extension application type. * `CORE` - A core extension, provided in the lib folder of the Maven installation. * `MAVEN_EXT_CLASSPATH` - A core extension provided via the -Dmaven.ext.class.path system property.   * `LIB_EXT` - A core extension, provided in the lib/ext folder of the Maven installation. * `PROJECT` - A project extension, provided via a declaration in .mvn/extensions.xml in the Maven working directory.  * `POM` - A build extension, provided via a declaration in the build section of the top level project pom.xml * `UNKNOWN` - An extension for which none of the other types match.
+          enum:
+            - CORE
+            - MAVEN_EXT_CLASSPATH
+            - LIB_EXT
+            - PROJECT
+            - POM
+            - UNKNOWN
+    MavenExtensions:
+      type: object
+      properties:
+        extensions:
+          type: array
+          description: A list of applied extensions in a Maven build.
+          items:
+            $ref: '#/components/schemas/MavenExtension'
     MavenResourceUsage:
       type: object
       properties:
@@ -6917,6 +7215,13 @@ components:
               $ref: '#/components/schemas/ApiProblem'
             model:
               $ref: '#/components/schemas/MavenPlugins'
+        mavenExtensions:
+          description: The extensions applied in a Maven build, or a report of a problem encountered.
+          properties:
+            problem:
+              $ref: '#/components/schemas/ApiProblem'
+            model:
+              $ref: '#/components/schemas/MavenExtensions'
         mavenResourceUsage:
           description: The resource usage gathered while executing a Maven build, or a report of a problem encountered.
           properties:
@@ -7434,6 +7739,170 @@ components:
           nullable: true
           items:
             $ref: '#/components/schemas/TestIncludeFields'
+    BuildTestsQuery:
+      x-all-of-name: BuildTestsQuery
+      type: object
+      properties:
+        workUnit:
+          type: string
+          description: |
+            The name of the test work unit to return test results for. If not specified, all work units are included.
+            May contain wildcards: an asterisk character ("*") matches an arbitrary number of characters.
+        testName:
+          type: string
+          description: |
+            The name of the test case or container to return test results for. If not specified, all tests and containers are included. 
+            May contain wildcards: an asterisk character ("*") matches an arbitrary number of characters.
+            The first matching test and all of its children are returned regardless of whether their names match the query or not.
+        testOutcomes:
+          type: array
+          description: |
+            Allows restricting the search to tests that had the given outcome. If not specified or empty, all tests and containers are included.
+            If the field contains multiple outcome values, then tests and containers having any of the provided outcomes are returned.
+            For test cases, the overall outcome is inspected. For test containers, their own outcome is inspected.
+            The filter is applied to the leaves of the test hierarchy first. The deepest test or container with matching outcomes is returned 
+            together with all of its parents, regardless of whether their outcomes match the query or not.
+          items:
+            $ref: '#/components/schemas/TestOutcome'
+    BuildTestsSummary:
+      type: object
+      description: A summary of test execution data for a build.
+      required:
+        - duration
+        - testCasesOutcomeDistribution
+        - testContainersOutcomeDistribution
+      properties:
+        duration:
+          type: object
+          required:
+            - total
+          properties:
+            total:
+              type: integer
+              format: int64
+              description: The timespan in milliseconds during which at least one test or container is running.
+            serial:
+              type: integer
+              format: int64
+              description: |
+                The sum of the time in milliseconds spent if tests and containers were running sequentially. 
+                May be absent if the duration of test containers of cases is unknown (for example, the duration of forked suites is not captured in sbt).
+        testCasesOutcomeDistribution:
+          $ref: '#/components/schemas/TestOutcomeDistribution'
+        testContainersOutcomeDistribution:
+          $ref: '#/components/schemas/TestOutcomeDistribution'
+    BuildTestOrContainerDuration:
+      type: object
+      description: Various types of test durations captured for a given test.
+      properties:
+        total:
+          type: integer
+          format: int64
+          description: |
+            The elapsed wall-clock time in milliseconds when the test or container is running.
+            May be absent if the duration of the current test container or case is unknown. For example, the duration of forked suites is not captured in sbt.
+        own:
+          type: integer
+          format: int64
+          description: |
+            The time spent in the test itself in milliseconds, e.g., during the setup or cleanup of test containers. 
+            Absent for test cases.
+        serial:
+          type: integer
+          format: int64
+          description: |
+            The sum of the time spent in milliseconds if tests and containers were running sequentially. 
+            Absent for test cases.
+    TestWorkUnitOutcome:
+      type: string
+      enum:
+        - passed
+        - failed
+        - skipped
+        - flaky
+        - timedOut
+    BuildTestOrContainerOutcome:
+      type: object
+      required:
+        - overall
+      properties:
+        overall:
+          $ref: '#/components/schemas/TestOutcome'
+        own:
+          $ref: '#/components/schemas/TestOutcome'
+        children:
+          $ref: '#/components/schemas/TestOutcome'
+    BuildTestOrContainerExecution:
+      type: object
+      required:
+        - duration
+        - outcome
+      properties:
+        duration:
+          $ref: '#/components/schemas/BuildTestOrContainerDuration'
+        outcome:
+          $ref: '#/components/schemas/BuildTestOrContainerOutcome'
+    BuildTestOrContainer:
+      type: object
+      required:
+        - name
+        - duration
+        - outcome
+        - executions
+        - children
+      properties:
+        name:
+          type: string
+          description: The name of the test or test container.
+        duration:
+          $ref: '#/components/schemas/BuildTestOrContainerDuration'
+        outcome:
+          $ref: '#/components/schemas/BuildTestOrContainerOutcome'
+        executions:
+          type: array
+          description: A summary of individual test executions. A test can run multiple times in a build if test retries are configured.
+          items:
+            $ref: '#/components/schemas/BuildTestOrContainerExecution'
+        children:
+          type: array
+          description: A list of child test containers or test cases that were executed in this test container.
+          items:
+            $ref: '#/components/schemas/BuildTestOrContainer'
+    BuildTestWorkUnit:
+      type: object
+      description: A work unit that ran tests in a build.
+      required:
+        - name
+        - duration
+        - outcome
+        - tests
+      properties:
+        name:
+          type: string
+          description: The name of the work unit.
+        duration:
+          $ref: '#/components/schemas/BuildTestOrContainerDuration'
+        outcome:
+          $ref: '#/components/schemas/TestWorkUnitOutcome'
+        tests:
+          type: array
+          description: A list of test containers or test cases that were executed in this work unit.
+          items:
+            $ref: '#/components/schemas/BuildTestOrContainer'
+    BuildTestsResponse:
+      type: object
+      description: Test execution data for a build.
+      required:
+        - summary
+        - workUnits
+      properties:
+        summary:
+          $ref: '#/components/schemas/BuildTestsSummary'
+        workUnits:
+          type: array
+          description: A list of test work units that were executed in the build.
+          items:
+            $ref: '#/components/schemas/BuildTestWorkUnit'
     TestDistributionAgentPoolId:
       description: The unique identifier of the agent pool.
       type: string
